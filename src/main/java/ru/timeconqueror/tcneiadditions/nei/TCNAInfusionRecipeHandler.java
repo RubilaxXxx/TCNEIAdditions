@@ -343,7 +343,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                     Aspect aspect = aspects.getAspectsSortedAmount()[count++];
                     int posX = baseX + column * 20 + xOffset;
                     int posY = baseY + row * 20;
-                    ItemStack stack = new ItemStack(ModItems.itemAspect, 1, 1);
+                    ItemStack stack = new ItemStack(ModItems.itemAspect, aspects.getAmount(aspect), 1);
                     ItemAspect.setAspect(stack, aspect);
                     this.ingredients.add(new PositionedStack(stack, posX, posY, false));
                 }
