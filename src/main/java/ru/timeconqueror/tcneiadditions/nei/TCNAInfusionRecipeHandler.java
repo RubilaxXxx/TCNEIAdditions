@@ -162,7 +162,7 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
                 Aspect aspect = aspects.getAspectsSortedAmount()[count++];
                 int posX = baseX + column * 20 + xOffset;
                 int posY = baseY + row * 20;
-                UtilsFX.drawTag(posX, posY, aspect, (float) aspects.getAmount(aspect), 0, GuiDraw.gui.getZLevel());
+                UtilsFX.drawTag(posX, posY, aspect, 0, 0, GuiDraw.gui.getZLevel());
             }
         }
     }

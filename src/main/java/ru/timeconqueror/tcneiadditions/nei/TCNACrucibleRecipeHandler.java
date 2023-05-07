@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,7 @@ import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
+import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.research.ResearchCategories;
@@ -104,6 +106,31 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     }
 
     @Override
+    public void drawAspects(int recipe, int x, int y)
+    {
+        AspectList aspects = this.aspectsAmount.get(recipe);
+        int aspectsPerRow = 3;
+        int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
+
+        int xBase = x + 8;
+        int yBase = y + 75 + 32 - 10 * rows;
+        int count = 0;
+
+        for (int row = 0; row < rows; row++)
+        {
+            int columns = Math.min(aspects.size() - row * 3, 3);
+            int offSet = (100 - columns * 20) / 2;
+            for (int column = 0; column < columns; column++)
+            {
+                Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+                int posX = xBase + column * 20 + offSet;
+                int posY = yBase + row * 20;
+                UtilsFX.drawTag(posX, posY, aspect, 0, 0, GuiDraw.gui.getZLevel());
+            }
+        }
+    }
+
+    @Override
     public void drawExtras(int recipeIndex) {
         CrucibleCachedRecipe recipe = (CrucibleCachedRecipe) arecipes.get(recipeIndex);
         if (recipe.shouldShowRecipe) {
@@ -175,7 +202,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             this.setAspectList(recipe.aspects);
             this.shouldShowRecipe = shouldShowRecipe;
             this.researchItem = ResearchCategories.getResearch(recipe.key);
-            NEIHelper.addAspectsToIngredients(this.aspects, this.ingredients, 2);
+            this.addAspectsToIngredients(aspects);
         }
 
         protected void setIngredient(Object in) {
@@ -233,6 +260,30 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
                 return false;
             }
             return super.contains(ingredients, ingredient);
+        }
+
+        protected void addAspectsToIngredients(AspectList aspects) {
+            int aspectsPerRow = 3;
+            int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
+
+            int xBase =  23 + 8;
+            int yBase =  -21 + 75 + 32 - 10 * rows;
+            int count = 0;
+
+            for (int row = 0; row < rows; row++)
+            {
+                int columns = Math.min(aspects.size() - row * 3, 3);
+                int offSet = (100 - columns * 20) / 2;
+                for (int column = 0; column < columns; column++)
+                {
+                    Aspect aspect = aspects.getAspectsSortedAmount()[count++];
+                    int posX = xBase + column * 20 + offSet;
+                    int posY = yBase + row * 20;
+                    ItemStack stack = new ItemStack(ModItems.itemAspect, aspects.getAmount(aspect), 1);
+                    ItemAspect.setAspect(stack, aspect);
+                    this.ingredients.add(new PositionedStack(stack, posX, posY, false));
+                }
+            }
         }
     }
 }
