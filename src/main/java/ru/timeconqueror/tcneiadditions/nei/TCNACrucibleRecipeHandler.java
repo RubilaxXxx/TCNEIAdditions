@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -13,8 +12,8 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
-import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.CrucibleRecipeHandler;
 
 import codechicken.lib.gui.GuiDraw;
@@ -106,8 +105,7 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
     }
 
     @Override
-    public void drawAspects(int recipe, int x, int y)
-    {
+    public void drawAspects(int recipe, int x, int y) {
         AspectList aspects = this.aspectsAmount.get(recipe);
         int aspectsPerRow = 3;
         int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
@@ -116,12 +114,10 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
         int yBase = y + 75 + 32 - 10 * rows;
         int count = 0;
 
-        for (int row = 0; row < rows; row++)
-        {
+        for (int row = 0; row < rows; row++) {
             int columns = Math.min(aspects.size() - row * 3, 3);
             int offSet = (100 - columns * 20) / 2;
-            for (int column = 0; column < columns; column++)
-            {
+            for (int column = 0; column < columns; column++) {
                 Aspect aspect = aspects.getAspectsSortedAmount()[count++];
                 int posX = xBase + column * 20 + offSet;
                 int posY = yBase + row * 20;
@@ -266,16 +262,14 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
             int aspectsPerRow = 3;
             int rows = (int) Math.ceil((double) aspects.size() / aspectsPerRow);
 
-            int xBase =  23 + 8;
-            int yBase =  -21 + 75 + 32 - 10 * rows;
+            int xBase = 23 + 8;
+            int yBase = -21 + 75 + 32 - 10 * rows;
             int count = 0;
 
-            for (int row = 0; row < rows; row++)
-            {
+            for (int row = 0; row < rows; row++) {
                 int columns = Math.min(aspects.size() - row * 3, 3);
                 int offSet = (100 - columns * 20) / 2;
-                for (int column = 0; column < columns; column++)
-                {
+                for (int column = 0; column < columns; column++) {
                     Aspect aspect = aspects.getAspectsSortedAmount()[count++];
                     int posX = xBase + column * 20 + offSet;
                     int posY = yBase + row * 20;

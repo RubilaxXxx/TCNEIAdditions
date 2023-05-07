@@ -1,12 +1,13 @@
 package ru.timeconqueror.tcneiadditions.nei.arcaneworkbench;
 
+import static com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper.getPrimalAspectListFromAmounts;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,7 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import com.djgiannuzz.thaumcraftneiplugin.ModItems;
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
 import com.djgiannuzz.thaumcraftneiplugin.nei.recipehandler.ArcaneShapedRecipeHandler;
@@ -39,8 +41,6 @@ import thaumcraft.api.wands.WandCap;
 import thaumcraft.api.wands.WandRod;
 import thaumcraft.client.lib.UtilsFX;
 import thaumcraft.common.items.wands.ItemWandCasting;
-
-import static com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper.getPrimalAspectListFromAmounts;
 
 public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
 
