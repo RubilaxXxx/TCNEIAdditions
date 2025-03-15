@@ -103,12 +103,6 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
     @Override
     public void drawBackground(int recipeIndex) {
         ArcaneShapelessCachedRecipe recipe = (ArcaneShapelessCachedRecipe) arecipes.get(recipeIndex);
-        if (recipe.shouldShowRecipe) {
-            super.drawBackground(recipeIndex);
-            this.drawAspects(recipeIndex);
-            return;
-        }
-
         int x = 34;
         int y = -15;
         UtilsFX.bindTexture("textures/gui/gui_researchbook_overlay.png");
@@ -118,7 +112,22 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
         GL11.glTranslatef((float) x, (float) y, 0.0F);
         GL11.glScalef(1.7F, 1.7F, 1.0F);
         GuiDraw.drawTexturedModalRect(20, 7, 20, 3, 16, 16);
+        if (recipe.shouldShowRecipe) {
+            GuiDraw.drawTexturedModalRect(2, 23, 112, 15, 52, 52);
+        }
         GL11.glPopMatrix();
+
+        if (recipe.shouldShowRecipe) {
+            GL11.glPushMatrix();
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.4F);
+            GL11.glEnable(3042);
+            GL11.glTranslatef((float) x - 30, (float) (y + 126), 0.0F);
+            GL11.glScalef(2.0F, 2.0F, 1.0F);
+            GuiDraw.drawTexturedModalRect(0, 0, 68, 76, 12, 12);
+            GL11.glPopMatrix();
+
+            this.drawAspects(recipeIndex);
+        }
     }
 
     public void drawAspects(int recipe) {
@@ -176,7 +185,8 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
                 y += 11;
             }
 
-            if (recipe.shouldShowRecipe && recipe.researchItem != null && !ThaumcraftApiHelper.isResearchComplete(this.userName, recipe.researchItem.key)){
+            if (recipe.shouldShowRecipe && recipe.researchItem != null
+                    && !ThaumcraftApiHelper.isResearchComplete(this.userName, recipe.researchItem.key)) {
                 y += 5;
                 String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
                 for (String text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {

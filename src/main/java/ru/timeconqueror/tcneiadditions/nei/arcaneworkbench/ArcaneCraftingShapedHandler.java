@@ -187,12 +187,6 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             throw new RuntimeException("Incompatible recipe type found: " + cRecipe.getClass());
         }
 
-        if (shouldShowRecipe) {
-            super.drawBackground(recipeIndex);
-            this.drawAspects(recipeIndex);
-            return;
-        }
-
         int x = 34;
         int y = -15;
         UtilsFX.bindTexture("textures/gui/gui_researchbook_overlay.png");
@@ -202,7 +196,22 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
         GL11.glTranslatef((float) x, (float) y, 0.0F);
         GL11.glScalef(1.7F, 1.7F, 1.0F);
         GuiDraw.drawTexturedModalRect(20, 7, 20, 3, 16, 16);
+        if (shouldShowRecipe) {
+            GuiDraw.drawTexturedModalRect(2, 23, 112, 15, 52, 52);
+        }
         GL11.glPopMatrix();
+
+        if (shouldShowRecipe) {
+            GL11.glPushMatrix();
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.4F);
+            GL11.glEnable(3042);
+            GL11.glTranslatef((float) x - 30, (float) (y + 126), 0.0F);
+            GL11.glScalef(2.0F, 2.0F, 1.0F);
+            GuiDraw.drawTexturedModalRect(0, 0, 68, 76, 12, 12);
+            GL11.glPopMatrix();
+
+            this.drawAspects(recipeIndex);
+        }
     }
 
     public void drawAspects(int recipe) {
@@ -334,20 +343,22 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 }
             }
 
-                if (shouldShowRecipe) {
-                    ResearchItem item = null;
-                    if (researchItemNormal != null) item = researchItemNormal;
-                    else if (researchItemCap != null) item = researchItemCap;
-                    else if (researchItemRod != null) item= researchItemRod;
+            if (shouldShowRecipe) {
+                ResearchItem item = null;
+                if (researchItemNormal != null) item = researchItemNormal;
+                else if (researchItemCap != null) item = researchItemCap;
+                else if (researchItemRod != null) item = researchItemRod;
 
-                    if (item != null && item.key != null && !ThaumcraftApiHelper.isResearchComplete(this.userName, item.key)){
-                        y += 5;
-                        String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
-                        for (String text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
-                            GuiDraw.drawStringC(text, 82, y, 0xAB0000, false);
-                            y += 11;
-                        }
+                if (item != null && item.key != null
+                        && !ThaumcraftApiHelper.isResearchComplete(this.userName, item.key)) {
+                    y += 5;
+                    String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
+                    for (String text : Minecraft.getMinecraft().fontRenderer
+                            .listFormattedStringToWidth(textToDraw, 162)) {
+                        GuiDraw.drawStringC(text, 82, y, 0xAB0000, false);
+                        y += 11;
                     }
+                }
 
             }
         }

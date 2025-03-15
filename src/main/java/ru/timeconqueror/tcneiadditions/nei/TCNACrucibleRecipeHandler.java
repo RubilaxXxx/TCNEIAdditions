@@ -169,7 +169,8 @@ public class TCNACrucibleRecipeHandler extends CrucibleRecipeHandler {
                 y += 11;
             }
 
-            if (recipe.shouldShowRecipe && recipe.researchItem != null && !ThaumcraftApiHelper.isResearchComplete(this.userName, recipe.researchItem.key)){
+            if (recipe.shouldShowRecipe && recipe.researchItem != null
+                    && !ThaumcraftApiHelper.isResearchComplete(this.userName, recipe.researchItem.key)) {
                 y += 5;
                 String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
                 for (String text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
