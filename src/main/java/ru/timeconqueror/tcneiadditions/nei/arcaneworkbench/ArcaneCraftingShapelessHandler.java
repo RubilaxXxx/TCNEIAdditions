@@ -30,6 +30,7 @@ import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCNAConfig;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.ThaumcraftApi;
+import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
@@ -173,6 +174,15 @@ public class ArcaneCraftingShapelessHandler extends ArcaneShapelessRecipeHandler
             for (String text : list) {
                 GuiDraw.drawStringC(text, 82, y, tcnaClient.getColor("tcneiadditions.gui.researchNameColor"), false);
                 y += 11;
+            }
+
+            if (recipe.shouldShowRecipe && recipe.researchItem != null && !ThaumcraftApiHelper.isResearchComplete(this.userName, recipe.researchItem.key)){
+                y += 5;
+                String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
+                for (String text : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(textToDraw, 162)) {
+                    GuiDraw.drawStringC(text, 82, y, 0xAB0000, false);
+                    y += 11;
+                }
             }
         }
 
