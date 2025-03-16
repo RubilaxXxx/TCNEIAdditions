@@ -343,14 +343,14 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                 }
             }
 
+            // if normal recipe, or if wand/staff/scepter and all parts are researched
             if (shouldShowRecipe) {
-                ResearchItem item = null;
-                if (researchItemNormal != null) item = researchItemNormal;
-                else if (researchItemCap != null) item = researchItemCap;
-                else if (researchItemRod != null) item = researchItemRod;
-
-                if (item != null && item.key != null
-                        && !ThaumcraftApiHelper.isResearchComplete(this.userName, item.key)) {
+                if ((researchItemNormal == null
+                        || !ThaumcraftApiHelper.isResearchComplete(this.userName, researchItemNormal.key))
+                        && ((researchItemCap == null
+                                || !ThaumcraftApiHelper.isResearchComplete(this.userName, researchItemCap.key))
+                                || (researchItemRod == null || !ThaumcraftApiHelper
+                                        .isResearchComplete(this.userName, researchItemRod.key)))) {
                     y += 5;
                     String textToDraw = StatCollector.translateToLocal("tcneiadditions.research.missing");
                     for (String text : Minecraft.getMinecraft().fontRenderer
