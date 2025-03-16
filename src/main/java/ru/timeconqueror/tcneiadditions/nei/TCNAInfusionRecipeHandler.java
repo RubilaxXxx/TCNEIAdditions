@@ -253,8 +253,12 @@ public class TCNAInfusionRecipeHandler extends InfusionRecipeHandler {
             this.addAspectsToIngredients(this.aspects);
             this.researchItem = ResearchCategories.getResearch(recipe.getResearch());
             this.prereqs = new ArrayList<>();
-            prereqs.add(
-                    new ResearchInfo(researchItem, ThaumcraftApiHelper.isResearchComplete(userName, researchItem.key)));
+            if (researchItem != null && researchItem.key != null) {
+                prereqs.add(
+                        new ResearchInfo(
+                                researchItem,
+                                ThaumcraftApiHelper.isResearchComplete(userName, researchItem.key)));
+            }
         }
 
         protected void setInstability(int inst) {

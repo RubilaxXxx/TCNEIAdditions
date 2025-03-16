@@ -47,7 +47,9 @@ public class ResearchInfo {
                         isResearched ? EnumChatFormatting.GREEN : EnumChatFormatting.RED,
                         category,
                         research));
-        TCUtil.getResearchPrerequisites(list, researchItem);
+        try {
+            TCUtil.getResearchPrerequisites(list, researchItem);
+        } catch (Exception ignored) {} // modded thaum is weird sometimes
         if (list.size() > 1) {
             list.add(1, "");
         }
