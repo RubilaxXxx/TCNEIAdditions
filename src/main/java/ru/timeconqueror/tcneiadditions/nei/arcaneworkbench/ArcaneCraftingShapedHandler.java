@@ -75,31 +75,6 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
     }
 
     @Override
-    public boolean mouseClicked(GuiRecipe<?> gui, int button, int recipe) {
-
-        CachedRecipe cRecipe = arecipes.get(recipe);
-        Point mousePos = GuiDraw.getMousePosition();
-
-        if (cRecipe instanceof ArcaneShapedCachedRecipe cachedRecipe) {
-            for (ResearchInfo r : cachedRecipe.prereqs) {
-                Rectangle rect = r.getRect(gui, recipe);
-                if (rect.contains(mousePos)) {
-                    return r.onClick();
-                }
-            }
-        } else if (cRecipe instanceof ArcaneWandCachedRecipe cachedRecipe) {
-            for (ResearchInfo r : cachedRecipe.prereqs) {
-                Rectangle rect = r.getRect(gui, recipe);
-                if (rect.contains(mousePos)) {
-                    return r.onClick();
-                }
-            }
-        }
-
-        return super.mouseClicked(gui, button, recipe);
-    }
-
-    @Override
     public void loadCraftingRecipes(ItemStack result) {
         if (result.getItem() instanceof ItemWandCasting) {
             ItemWandCasting wand = (ItemWandCasting) result.getItem();

@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.recipe.GuiRecipe;
-import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import ru.timeconqueror.tcneiadditions.util.GuiRecipeHelper;
 import ru.timeconqueror.tcneiadditions.util.TCUtil;
 import thaumcraft.api.research.ResearchCategories;
@@ -19,9 +18,6 @@ import thaumcraft.api.research.ResearchItem;
 import thaumcraft.client.lib.UtilsFX;
 
 public class ResearchInfo {
-
-    final int RESEARCH_COLOR = TCNAClient.getInstance().getColor("tcneiadditions.gui.researchNameColor");
-    final int MISSING_RESEARCH_COLOR = 0xAB0000;
 
     private final boolean isResearched;
     private final String category;
@@ -78,10 +74,6 @@ public class ResearchInfo {
         }
 
         GL11.glPopMatrix();
-    }
-
-    public boolean onClick() {
-        return true;
     }
 
     public Rectangle getRect(GuiRecipe<?> gui, int recipeIndex) {
