@@ -87,17 +87,16 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
                     shouldShowRecipe = true;
                 }
             }
-            if (!TCNAClient.getInstance().areWandRecipesDeleted()) {
-                ArcaneWandCachedRecipe recipe = new ArcaneWandCachedRecipe(
-                        rod,
-                        cap,
-                        result,
-                        wand.isSceptre(result),
-                        shouldShowRecipe);
-                recipe.computeVisuals();
-                this.arecipes.add(recipe);
-                this.aspectsAmount.add(NEIHelper.getWandAspectsWandCost(result));
-            }
+
+            ArcaneWandCachedRecipe recipe = new ArcaneWandCachedRecipe(
+                    rod,
+                    cap,
+                    result,
+                    wand.isSceptre(result),
+                    shouldShowRecipe);
+            recipe.computeVisuals();
+            this.arecipes.add(recipe);
+            this.aspectsAmount.add(NEIHelper.getWandAspectsWandCost(result));
 
             loadShapedRecipesForWands(result, shouldShowRecipe);
         } else {
