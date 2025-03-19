@@ -317,8 +317,12 @@ public class ArcaneCraftingShapedHandler extends ArcaneShapedRecipeHandler {
             this.shouldShowRecipe = shouldShowRecipe;
             this.researchItem = ResearchCategories.getResearch(recipe.getResearch());
             this.prereqs = new ArrayList<>();
-            prereqs.add(
-                    new ResearchInfo(researchItem, ThaumcraftApiHelper.isResearchComplete(userName, researchItem.key)));
+            if (researchItem != null && researchItem.key != null) {
+                prereqs.add(
+                        new ResearchInfo(
+                                researchItem,
+                                ThaumcraftApiHelper.isResearchComplete(userName, researchItem.key)));
+            }
             this.addAspectsToIngredients(aspects);
         }
 
