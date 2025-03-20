@@ -28,13 +28,19 @@ public class ResearchInfo {
 
     public ResearchInfo(ResearchItem researchItem, boolean isResearched) {
         this.researchItem = researchItem;
-        this.category = ResearchCategories.getCategoryName(researchItem.category);
-        this.research = researchItem.getName();
-        ResearchCategoryList list = ResearchCategories.getResearchList(researchItem.category);
-        if (list != null && list.icon != null) {
-            icon = list.icon;
+        if (researchItem != null) {
+            this.category = ResearchCategories.getCategoryName(researchItem.category);
+            ResearchCategoryList list = ResearchCategories.getResearchList(researchItem.category);
+            if (list != null && list.icon != null) {
+                icon = list.icon;
+            } else {
+                icon = null;
+            }
+            this.research = researchItem.getName();
         } else {
+            category = null;
             icon = null;
+            research = "N/A";
         }
         this.isResearched = isResearched;
     }
@@ -45,7 +51,7 @@ public class ResearchInfo {
                         "%s%s%s : %s",
                         EnumChatFormatting.UNDERLINE,
                         isResearched ? EnumChatFormatting.GREEN : EnumChatFormatting.RED,
-                        category,
+                        category != null ? category : "N/A",
                         research));
         try {
             TCUtil.getResearchPrerequisites(list, researchItem);
