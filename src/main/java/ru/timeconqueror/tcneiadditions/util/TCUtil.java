@@ -8,11 +8,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.glease.tc4tweak.api.infusionrecipe.EnhancedInfusionRecipe;
+import net.glease.tc4tweak.api.infusionrecipe.InfusionRecipeExt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.oredict.OreDictionary;
 
 import com.djgiannuzz.thaumcraftneiplugin.items.ItemAspect;
 import com.djgiannuzz.thaumcraftneiplugin.nei.NEIHelper;
@@ -25,6 +26,7 @@ import ru.timeconqueror.tcneiadditions.client.TCNAClient;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
 import thaumcraft.api.research.ResearchCategories;
@@ -63,25 +65,68 @@ public class TCUtil {
     }
 
     public static List<InfusionRecipe> getInfusionRecipesByInput(ItemStack input) {
-        ArrayList<InfusionRecipe> list = new ArrayList<>();
-        for (Object r : ThaumcraftApi.getCraftingRecipes()) {
-            if (!(r instanceof InfusionRecipe)) continue;
-            InfusionRecipe tcRecipe = (InfusionRecipe) r;
-            if (tcRecipe.getRecipeInput() == null || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null)
-                continue;
+        final ArrayList<InfusionRecipe> list = new ArrayList<>();
 
-            if (input.getItem() instanceof ItemAspect) {
-                Aspect aspect = ItemAspect.getAspects(input).getAspects()[0];
-                if (tcRecipe.getAspects().aspects.containsKey(aspect)) {
-                    list.add(tcRecipe);
-                }
+        // if input is an Aspect item, pre-read its aspect safely
+        Aspect inputAspect = null;
+        boolean inputIsAspectItem = input != null && input.getItem() instanceof ItemAspect;
+        if (inputIsAspectItem) {
+            AspectList alt = ItemAspect.getAspects(input);
+            if (alt != null && alt.getAspects() != null && alt.getAspects().length > 0) {
+                inputAspect = alt.getAspects()[0];
             } else {
-                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(tcRecipe.getRecipeInput(), input)
-                        || matchInfusionComponents(tcRecipe.getComponents(), input)) {
-                    list.add(tcRecipe);
-                }
+                return list;
             }
         }
+
+        for (Object r : ThaumcraftApi.getCraftingRecipes()) {
+            if (!(r instanceof InfusionRecipe)) continue;
+            InfusionRecipe raw = (InfusionRecipe) r;
+
+            if (raw.getRecipeOutput() == null) continue;
+            Object[] comps = raw.getComponents();
+            if (comps == null) continue; // avoid null array stream
+
+            // keep bad recipe from killing the scan
+            EnhancedInfusionRecipe tcRecipe;
+            try {
+                tcRecipe = InfusionRecipeExt.get().convert(raw);
+            } catch (RuntimeException e) {
+                continue;
+            }
+            if (tcRecipe == null) continue;
+
+            if (tcRecipe.getCentral() == null || TCUtil.getAssociatedItemStack(tcRecipe.getRecipeOutput()) == null) {
+                continue;
+            }
+
+            boolean aspectsContain = false;
+            if (inputIsAspectItem && inputAspect != null
+                    && tcRecipe.getAspects() != null
+                    && tcRecipe.getAspects().aspects != null) {
+                aspectsContain = tcRecipe.getAspects().aspects.containsKey(inputAspect);
+            }
+
+            if (inputIsAspectItem) {
+                if (aspectsContain) list.add(tcRecipe);
+            } else {
+                boolean centralMatches = tcRecipe.getCentral().matches(input);
+
+                boolean componentMatches = false;
+                if (tcRecipe.getComponentsExt() != null && !tcRecipe.getComponentsExt().isEmpty()) {
+                    componentMatches = tcRecipe.getComponentsExt().stream().anyMatch(c -> {
+                        try {
+                            return c != null && c.matches(input);
+                        } catch (Throwable t) {
+                            return false;
+                        }
+                    });
+                }
+
+                if (centralMatches || componentMatches) list.add(tcRecipe);
+            }
+        }
+
         return list;
     }
 
@@ -106,17 +151,6 @@ public class TCUtil {
         return list;
     }
 
-    public static boolean matchInfusionComponents(ItemStack[] components, ItemStack stack) {
-        for (ItemStack component : components) {
-            for (ItemStack toCompare : getOreDictionaryMatchingItemsForInfusion(component)) {
-                if (NEIServerUtils.areStacksSameTypeCraftingWithNBT(toCompare, stack)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public static boolean shouldShowRecipe(String username, String researchKey) {
         return ThaumcraftApiHelper.isResearchComplete(username, researchKey) || TCNAConfig.showLockedRecipes;
     }
@@ -130,23 +164,6 @@ public class TCUtil {
             }
         }
         return NEIHelper.getAssociatedItemStack(o);
-    }
-
-    public static List<ItemStack> getOreDictionaryMatchingItemsForInfusion(ItemStack stack) {
-        // Because of InfusionRecipe#areItemStacksEqual looking for only the first oredict matching for the ingredient,
-        // ingredients that have multiple oredict entries cannot be reliably used as alternative for the recipe input.
-        List<ItemStack> result = new ArrayList<>();
-        for (int oreID : OreDictionary.getOreIDs(stack)) {
-            for (ItemStack matchedStack : OreDictionary.getOres(OreDictionary.getOreName(oreID))) {
-                if (matchedStack.getItemDamage() != OreDictionary.WILDCARD_VALUE
-                        && OreDictionary.getOreIDs(matchedStack).length == 1
-                        && !NEIServerUtils.areStacksSameTypeCrafting(matchedStack, stack)) {
-                    result.add(matchedStack);
-                }
-            }
-        }
-        result.add(stack);
-        return result;
     }
 
     public static void getResearchPrerequisites(List<String> list, ResearchItem researchItem) {
