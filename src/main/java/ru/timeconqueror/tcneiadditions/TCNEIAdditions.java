@@ -26,7 +26,7 @@ public class TCNEIAdditions {
     public static final String MODID = "tcneiadditions";
     public static final String NAME = "Thaumcraft NEI Additions";
     public static final String VERSION = Tags.VERSION;
-    public static final String DEPENDENCIES = "required-after:Thaumcraft;required-after:thaumcraftneiplugin;required-after:gtnhmixins;after:Automagy";
+    public static final String DEPENDENCIES = "required-after:Thaumcraft;required-after:thaumcraftneiplugin;required-after:gtnhmixins;after:Automagy;required-after:tc4tweak";
     public static final String GUI_FACTORY = "ru.timeconqueror.tcneiadditions.client.gui.GuiFactory";
 
     public static final Logger LOGGER = LogManager.getLogger(NAME);
